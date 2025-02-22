@@ -1,0 +1,113 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+// Admin subclass
+class Admin extends User {
+    private static final String ADMIN_USERNAME = "admin"; // Static username
+    private static final String ADMIN_PASSWORD = "adminpassword"; // Static password
+
+    // Constructor for Admin
+    public Admin(String firstName, String lastName, String mobileNumber, String email, String password) {
+        super(firstName, lastName, mobileNumber, email, password, true); // Set isAdmin to true
+    }
+
+    // Static method for admin login
+    public static boolean login(String username, String password) {
+        return ADMIN_USERNAME.equals(username) && ADMIN_PASSWORD.equals(password);
+    }
+
+    // Method to manage slot exchanges
+    public void manageSlotExchanges(ArrayList<SlotExchangeRequest> slotRequests) {
+        System.out.println("Managing Slot Exchanges:");
+        for (SlotExchangeRequest request : slotRequests) {
+            System.out.println("User: " + request.getUserId() + " requested slot: " + request.getRequestedSlot());
+            // Implement logic to approve/deny exchanges
+            // Simple example: approve all requests
+            System.out.println("Approved exchange for user: " + request.getUserId());
+        }
+    }
+
+    // Method to check user feedback
+    public void checkFeedback(ArrayList<Feedback.FeedbackEntry> feedbackEntries) {
+        System.out.println("User Feedback:");
+        for (Feedback.FeedbackEntry entry : feedbackEntries) {
+            System.out.println("User: " + entry.getUserId() + " - Feedback: " + entry.getMessage());
+        }
+    }
+
+    // Method to view service updates
+    public void viewServiceUpdates(ArrayList<ServiceUpdate> serviceUpdates) {
+        System.out.println("Vehicle Service Updates:");
+        for (ServiceUpdate update : serviceUpdates) {
+            System.out.println("User: " + update.getUserId() + " - Status: " + update.getUpdateStatus());
+        }
+    }
+
+    // Method to update vehicle service status
+    public void adminUpdateServiceStatus() {
+        System.out.print("Enter Car ID: ");
+        String carId = scanner.nextLine();
+        
+        System.out.println("Select status:");
+        System.out.println("1. Not Started");
+        System.out.println("2. Pending");
+        System.out.println("3. Completed");
+        
+        String choice = scanner.nextLine();
+        String status;
+        
+        switch (choice) {
+            case "1":
+                status = "not started";
+                break;
+            case "2":
+                status = "pending";
+                break;
+            case "3":
+                status = "completed";
+                break;
+            default:
+                System.out.println("Invalid choice!");
+                return;
+        }
+        
+        // Here you would update the service status in the relevant data structure
+        System.out.println("Service status for Car ID " + carId + " updated to: " + status);
+    }
+
+    // Admin menu to access functionalities
+    public void adminMenu(ArrayList<SlotExchangeRequest> slotRequests, ArrayList<Feedback.FeedbackEntry> feedbackEntries, ArrayList<ServiceUpdate> serviceUpdates) {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("\n----- Admin Panel -----");
+            System.out.println("1. Manage Slot Exchanges");
+            System.out.println("2. Check User Feedback");
+            System.out.println("3. View Vehicle Service Updates");
+            System.out.println("4. Update Vehicle Service Status");
+            System.out.println("5. Logout");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    manageSlotExchanges(slotRequests);
+                    break;
+                case 2:
+                    checkFeedback(feedbackEntries);
+                    break;
+                case 3:
+                    viewServiceUpdates(serviceUpdates);
+                    break;
+                case 4:
+                    adminUpdateServiceStatus(); // Call the new method here
+                    break;
+                case 5:
+                    System.out.println("Logging out...");
+                    return; // Exit the admin menu
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
