@@ -33,7 +33,10 @@ class Main {
         mainMenu();
     }
 
+<<<<<<< HEAD
     
+=======
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
     static void mainMenu() {
         while (true) {
             System.out.println(BG_BLUE + "\n╔════════ MAIN MENU ════════╗" + DEF);

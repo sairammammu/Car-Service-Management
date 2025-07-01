@@ -1,0 +1,277 @@
+import java.util.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public class SlotBooking {
+    private static final Map<String, List<String>> slots = new HashMap<>();
+    private static final Map<String, String> bookedSlots = new HashMap<>();
+    private static final List<SlotExchangeRequest> exchangeRequests = new ArrayList<>();
+    private final Scanner scanner;
+    private final Payment payment;
+
+    private static final String RESET = "\u001B[0m";
+    private static final String GREEN = "\u001B[32m";
+    private static final String RED = "\u001B[31m";
+    private static final String YELLOW = "\u001B[33m";
+    private static final String BLUE = "\u001B[34m";
+    private static final String CYAN = "\u001B[36m";
+
+    public SlotBooking(CarService carService) { // Accept CarService as a parameter
+        scanner = new Scanner(System.in);
+        payment = new Payment(carService); // Pass the CarService instance
+        initializeSlots();
+    }
+
+    private void initializeSlots() {
+        LocalDate currentDate = LocalDate.now();
+        String[] timeSlots = {"09:00 AM", "10:00 AM", "11:00 AM", "02:00 PM", "03:00 PM", "04:00 PM"};
+        
+        for (int i = 1; i <= 7; i++) {
+            LocalDate date = currentDate.plusDays(i);
+            String dateStr = date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            slots.put(dateStr, new ArrayList<>(Arrays.asList(timeSlots)));
+        }
+    }
+
+    public void showAvailableSlots() {
+        System.out.println("\n===== Available Slots =====");
+        if (slots.isEmpty()) {
+            System.out.println("No slots available.");
+            return;
+        }
+
+        slots.forEach((date, timeSlots) -> {
+            if (!timeSlots.isEmpty()) {
+                System.out.println("\nDate: " + date);
+                System.out.println("Available Times:");
+                for (int i = 0; i < timeSlots.size(); i++) {
+                    System.out.println((i + 1) + ". " + timeSlots.get(i));
+                }
+            }
+        });
+        System.out.println("========================");
+    }
+
+    private String generateSlotId() {
+        String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        String day = days[new Random().nextInt(days.length)]; // Randomly select a day
+        String numberPart = String.format("%02d", new Random().nextInt(100)); // Generate 2 random digits
+        char randomChar = (char) ('A' + new Random().nextInt(26)); // Generate a random uppercase letter
+
+        return day + numberPart + randomChar; // Combine to form the slot ID
+    }
+
+    public void bookSlot(User user) {
+        try {
+            showAvailableSlots();
+            if (slots.isEmpty()) {
+                System.out.println("No slots available for booking.");
+                return;
+            }
+
+            String date = getValidDateInput();
+            if (date == null) return;
+
+            List<String> timeSlots = slots.get(date);
+            if (timeSlots.isEmpty()) {
+                System.out.println("No time slots available for selected date.");
+                return;
+            }
+
+            String selectedTime = getValidTimeSlotInput(timeSlots);
+            if (selectedTime == null) return;
+
+            String slotId = generateSlotId(); // Generate a unique 12-digit alphanumeric ID
+
+            if (payment.slotBookPayment(user)) {
+                timeSlots.remove(selectedTime);
+                bookedSlots.put(slotId, user.getUserId());
+                System.out.println("\nSlot booked successfully!");
+                System.out.println("Date: " + date);
+                System.out.println("Time: " + selectedTime);
+                System.out.println("Slot ID: " + slotId);
+            } else {
+                System.out.println("Slot booking failed due to payment issue.");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error in slot booking: " + e.getMessage());
+            scanner.nextLine(); // Clear scanner buffer
+        }
+    }
+
+    public static void viewFeedback() {
+        List<Feedback.FeedbackEntry> feedbackList = Feedback.getAllFeedbackEntries();
+        if (feedbackList.isEmpty()) {
+            System.out.println("No feedback available.");
+        } else {
+            System.out.println("===== User Feedback =====");
+            for (Feedback.FeedbackEntry feedback : feedbackList) {
+                System.out.println("User: " + feedback.getUserId() + " - Feedback: " + feedback.getMessage());
+            }
+        }
+    }
+
+    private String getValidDateInput() {
+        System.out.print("Enter the date (dd-MM-yyyy): ");
+        String date = scanner.nextLine();
+        if (!slots.containsKey(date)) {
+            System.out.println("Invalid date or no slots available for this date.");
+            return null;
+        }
+        return date;
+    }
+
+    private String getValidTimeSlotInput(List<String> timeSlots) {
+        System.out.println("\nAvailable time slots:");
+        for (int i = 0; i < timeSlots.size(); i++) {
+            System.out.println((i + 1) + ". " + timeSlots.get(i));
+        }
+        System.out.print("Select time slot number: ");
+        int slotChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        if (slotChoice < 1 || slotChoice > timeSlots.size()) {
+            System.out.println("Invalid slot selection.");
+            return null;
+        }
+        return timeSlots.get(slotChoice - 1);
+    }
+
+    public void cancelSlot(User user) {
+        System.out.println("\n===== Your Booked Slots =====");
+        List<String> userSlots = getUserBookedSlots(user);
+
+        if (userSlots.isEmpty()) {
+            System.out.println("You have no booked slots.");
+            return;
+        }
+
+        userSlots.forEach(System.out::println);
+
+        System.out.print("\nIf you cancel a slot, we won't return money. Would you like to cancel or exchange? (Type 'cancel' or 'exchange'): ");
+        String userChoice = scanner.nextLine();
+        
+        if (userChoice.equalsIgnoreCase("cancel")) {
+            System.out.print("\nEnter the slot ID to cancel: ");
+            String slotId = scanner.nextLine();
+
+            if (bookedSlots.containsKey(slotId) && bookedSlots.get(slotId).equals(user.getUserId())) {
+                String[] parts = slotId.split("_");
+                String date = parts[0];
+                String time = parts[1];
+
+                slots.computeIfAbsent(date, k -> new ArrayList<>()).add(time);
+                bookedSlots.remove(slotId);
+                System.out.println("Slot cancelled successfully.");
+            } else {
+                System.out.println("Invalid slot ID or you don't have permission to cancel this slot.");
+            }
+        } else if (userChoice.equalsIgnoreCase("exchange")) {
+            requestSlotExchange(user);
+        } else {
+            System.out.println("Invalid choice. Please enter 'cancel' or 'exchange'.");
+        }
+    }
+
+public void requestSlotExchange(User user) {
+    System.out.println(YELLOW + "\n╔════════ SLOT EXCHANGE REQUEST ════════╗" + RESET);
+    
+    List<String> userSlots = getUserBookedSlots(user);
+
+    if (userSlots.isEmpty()) {
+        System.out.println(RED + "\n⚠️ You have no booked slots to exchange." + RESET);
+        System.out.println(CYAN + "Please book a slot first from the main menu." + RESET);
+        return;
+    }
+
+    System.out.println(BLUE + "\nYour Current Bookings:" + RESET);
+    userSlots.forEach(slot -> System.out.println(CYAN + "• " + slot + RESET));
+
+    System.out.print(YELLOW + "\nEnter your current slot ID to exchange: " + RESET);
+    String currentSlotId = scanner.nextLine().trim();
+
+    if (!bookedSlots.containsKey(currentSlotId) || !bookedSlots.get(currentSlotId).equals(user.getUserId())) {
+        System.out.println(RED + "\n❌ Invalid slot ID or you don't have permission to exchange this slot." + RESET);
+        return;
+    }
+
+    showAvailableSlots();
+    System.out.print(YELLOW + "\nEnter the desired date for exchange (dd-MM-yyyy): " + RESET);
+    String newDate = scanner.nextLine().trim();
+
+    if (!slots.containsKey(newDate)) {
+        System.out.println(RED + "\n❌ Invalid date or no slots available for this date." + RESET);
+        return;
+    }
+
+    List<String> timeSlots = slots.get(newDate);
+    if (timeSlots.isEmpty()) {
+        System.out.println(RED + "\n❌ No time slots available for the selected date." + RESET);
+        return;
+    }
+
+    String selectedTime = getValidTimeSlotInput(timeSlots);
+    if (selectedTime == null) return;
+
+    // Create and submit the request
+    SlotExchangeRequest request = new SlotExchangeRequest(user.getUserId(), currentSlotId, newDate + "_" + selectedTime);
+    request.submitRequest(); // Mark as submitted
+    exchangeRequests.add(request);
+    
+    System.out.println(GREEN + "\n✓ Slot exchange request submitted successfully!" + RESET);
+    System.out.println(CYAN + "• Request Status: PENDING" + RESET);
+    System.out.println(CYAN + "• You can check the status in the 'Check Status' menu" + RESET);
+    System.out.println(YELLOW + "\n╚══════════════════════════════╝" + RESET);
+}
+
+    private List<String> getUserBookedSlots(User user) {
+        return bookedSlots.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(user.getUserId()))
+                .map(Map.Entry::getKey)
+                .toList();
+    }
+
+    public List<SlotExchangeRequest> getExchangeRequests() {
+        return new ArrayList<>(exchangeRequests);
+    }
+
+    public void showSlotBookingMenu(User user) {
+        while (true) {
+            try {
+                System.out.println("\n===== Slot Booking Menu =====");
+                System.out.println("1. Show Available Slots");
+                System.out.println("2. Book a Slot");
+                System.out.println("3. Cancel a Slot");
+                System.out.println("4. Request Slot Exchange");
+                System.out.println("5. Back to Main Menu");
+                System.out.print("Choose an option: ");
+                
+                int choice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+
+                switch (choice) {
+                    case 1:
+                        showAvailableSlots();
+                        break;
+                    case 2:
+                        bookSlot(user);
+                        break;
+                    case 3:
+                        cancelSlot(user);
+                        break;
+                    case 4:
+                        requestSlotExchange(user);
+                        break;
+                    case 5:
+                        return;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a valid number.");
+                scanner.nextLine(); // Clear scanner buffer
+            }
+        }
+    }
+}

@@ -37,7 +37,11 @@ public class Payment {
     }
 
     private void displayBill(String paymentType, double baseAmount, double totalBill) {
+<<<<<<< HEAD
         System.out.println(YELLOW + "\n╔══════════════ FINAL BILL ══════════════╗" + DEF);
+=======
+        System.out.println(YELLOW + "\n╔════════ FINAL BILL ════════╗" + DEF);
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
         System.out.println(SKYBLUE + "Payment Type: " + DEF + paymentType);
         System.out.println(SKYBLUE + "Base Amount: " + DEF + "₹" + String.format("%.2f", baseAmount));
         System.out.println(SKYBLUE + "Basic Services Included:" + DEF);
@@ -45,7 +49,11 @@ public class Payment {
         System.out.println(SKYBLUE + "  • Interior Cleaning: " + DEF + "Included for Free");
         System.out.println(SKYBLUE + "  • Doorstep Delivery: " + DEF + "Included for Free");
         System.out.println(GREEN + "Total Amount: ₹" + String.format("%.2f", totalBill) + DEF);
+<<<<<<< HEAD
         System.out.println(YELLOW + "╚════════════════════════════════════════╝\n" + DEF);
+=======
+        System.out.println(YELLOW + "╚═══════════════════════════╝\n" + DEF);
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
     }
 
     public boolean slotBookPayment(User user) {
@@ -162,8 +170,12 @@ public class Payment {
         System.out.println(color + "╚═══════════════════════════════════════╝\n" + DEF);
     }
 
+<<<<<<< HEAD
     private boolean verifyPin()
     {
+=======
+    private boolean verifyPin() {
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
         int attempts = 3;
         while (attempts > 0) {
             System.out.print(YELLOW + "\nEnter UPI PIN: " + DEF);
@@ -180,7 +192,10 @@ public class Payment {
         return false;
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
     private void collectFeedback(User user) {
         System.out.println(YELLOW + "\n═══════ Feedback ═══════" + DEF);
         System.out.println(SKYBLUE + "We value your feedback! Please share your experience:" + DEF);
@@ -237,5 +252,9 @@ public class Payment {
             default -> BG_RED + "UNKNOWN " + RED + "?" + DEF;
         };
     }
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324

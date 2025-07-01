@@ -84,7 +84,78 @@ public class User {
     public static boolean isValidMobileNumber(String mobileNumber) {
         return mobileNumber.matches("[6-9]\\d{9}");
     }
+<<<<<<< HEAD
        
+=======
+        // Static method to register a new user
+    // public static void registerUser(ArrayList<User> users) {
+    //    // User newUser = new User("akash", "balerao", "7680060358", "akash@gmail.com", "1234", false);
+    //     //users.add(newUser);
+
+    //     System.out.println(BG_BLUE + "\n╔════════ USER REGISTRATION ════════╗" + DEF);
+        
+    //     System.out.print(SKYBLUE + "Enter First Name: " + DEF);
+    //     String firstName = scanner.nextLine();
+        
+    //     System.out.print(SKYBLUE + "Enter Last Name: " + DEF);
+    //     String lastName = scanner.nextLine();
+
+
+    //     String mobileNumber;
+    //     while (true) {
+    //         System.out.print(SKYBLUE + "Enter Mobile Number: " + DEF);
+    //         mobileNumber = scanner.nextLine();
+    //         if (isValidMobileNumber(mobileNumber)) {
+    //             break;
+    //         } else {
+    //             System.out.println(RED + "\n❌ Invalid mobile number!" + DEF);
+    //             System.out.println(YELLOW + "• Number should be 10 digits" + DEF);
+    //             System.out.println(YELLOW + "• Should start with 6-9" + DEF);
+    //             System.out.println(YELLOW + "Please try again." + DEF);
+    //         }
+    //     }
+
+    //     System.out.print(SKYBLUE + "Enter Email: " + DEF);
+    //     String email = scanner.nextLine();
+        
+    //     System.out.print(SKYBLUE + "Enter Password: " + DEF);
+    //     String password = scanner.nextLine();
+      
+    //     // Default isAdmin to false for regular users
+    //     boolean isAdmin = false;
+
+    //     // OTP Generation and Verification
+    //     System.out.println(BG_YELLOW + "\n═══════ OTP VERIFICATION ═══════" + DEF);
+    //     int otp = generateOTP();
+    //     System.out.println(YELLOW + "Your OTP is: " + BLINK + GREEN + otp + DEF);
+        
+    //     while (true) {
+    //         System.out.print(SKYBLUE + "Enter the OTP: " + DEF);
+    //         try {
+    //             int enteredOtp = scanner.nextInt();
+    //             scanner.nextLine(); // Consume newline
+
+    //             if (otp == enteredOtp) {
+    //                 User newUser = new User(firstName, lastName, mobileNumber, email, password, isAdmin);
+    //                 users.add(newUser);
+                    
+    //                 System.out.println(BG_GREEN + "\n✓ Registration Successful!" + DEF);
+    //                 System.out.println(GREEN + "Welcome to Car Service Application, " + firstName + "!" + DEF);
+                    
+    //                 break;
+    //             } else {
+    //                 System.out.println(RED + "\n❌ Incorrect OTP. Please try again." + DEF);
+    //             }
+    //         } catch (Exception e) {
+    //             System.out.println(RED + "\n❌ Invalid input! Please enter a valid OTP." + DEF);
+    //             scanner.nextLine(); // Clear the invalid input
+    //         }
+    //     }
+    //     System.out.println(BG_BLUE + "╚══════════════════════════════╝" + DEF);
+    // }
+
+
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
 
 
     public static void registerUser(ArrayList<User> users) {
@@ -227,7 +298,11 @@ public class User {
     // Static method to generate a 4-digit OTP
     private static int generateOTP() {
         Random random = new Random();
+<<<<<<< HEAD
         return 1000 + random.nextInt(8999);
+=======
+        return 1000 + random.nextInt(9000);
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
     }
 
     // Method to simulate processing

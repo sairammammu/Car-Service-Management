@@ -92,8 +92,13 @@ private void checkSlotExchangeRequestStatus() {
         String currentStatus = slotExchangeRequest.getStatus();
         int requestStatus = SlotExchangeRequest.getRequestStatus();
 
+<<<<<<< HEAD
         System.out.println(currentStatus);
         System.out.println(requestStatus);
+=======
+        //System.out.println(currentStatus);
+        //System.out.println(requestStatus);
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
 
 
         // Display status based on the current state

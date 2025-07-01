@@ -84,8 +84,12 @@ public class CarManagement {
         return false;
     }
 
+<<<<<<< HEAD
     private void addCar(User user) 
     {
+=======
+    private void addCar(User user) {
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
         while (true) {
             System.out.print(BLUE + "Enter Car ID: " + DEF);
             carId = scanner.nextLine();
@@ -102,7 +106,10 @@ public class CarManagement {
                     break;
                 }
             }
+<<<<<<< HEAD
             
+=======
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
 
             if (carExists) {
                 System.out.println(RED + "❌ This Car ID is already assigned. Please enter a unique Car ID." + DEF);
@@ -165,7 +172,11 @@ public class CarManagement {
             
             location = scanner.nextLine().trim();
 
+<<<<<<< HEAD
             if (location.startsWith("google/maps/place")) {
+=======
+            if (location.startsWith("google/map/place")) {
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
                 System.out.println(GREEN + "✔ Location successfully recorded!" + DEF);
                 break;
             } else {
@@ -179,7 +190,11 @@ public class CarManagement {
 
         Car car = new Car(carId, make, model, year, licensePlate, kmReading); // Update Car constructor to include location
         user.addCar(car);
+<<<<<<< HEAD
         carIds.add(car.getCarId());  //arrailist to store car ids
+=======
+        carIds.add(car.getCarId());
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
         System.out.println(BG_GREEN + "✔ Car added successfully!" + DEF);
     }
 
@@ -229,9 +244,14 @@ public class CarManagement {
     private void removeCar(User user) {
         System.out.print(BLUE + "🔍 Enter Car ID to remove: " + DEF);
         String carId = scanner.nextLine();
+<<<<<<< HEAD
         for (Car car : user.getCars()) {   //for(int i:arr)
             if (car.getCarId().equals(carId))
             {
+=======
+        for (Car car : user.getCars()) {
+            if (car.getCarId().equals(carId)) {
+>>>>>>> 163bc61dd13f5df540ed406b20933002d5607324
                 user.getCars().remove(car);
                 System.out.println(BG_GREEN + "✔ Car removed successfully!" + DEF);
                 return;
